@@ -6,7 +6,7 @@ foreach (array('data', 'antrian', 'undo') as $k) {
 }
 
 /* ---------- SORTING (ascending berdasarkan $key) ---------- */
-function bubbleSort($arr, $key) {
+function bubbleSort($arr, $key) {  
     $n = count($arr);
     for ($i = 0; $i < $n - 1; $i++) {
         for ($j = 0; $j < $n - $i - 1; $j++) {
@@ -58,6 +58,48 @@ function profilSorting($arr, $key, $dipakai, $ulang = 1000) {
     );
 }
 
+/* ---------- TRAVERSAL ---------- */
+// Format satu baris data mahasiswa
+function barisData($no, $s) {
+    return $no . '. ' . $s['nim'] . ' - ' . $s['nama'] . ' (nilai ' . $s['nilai'] . ')';
+}
+
+// Maju: dari data pertama sampai terakhir
+function traversalMaju($arr) {
+    $hasil = array();
+    $no = 1;
+    foreach ($arr as $s) {
+        $hasil[] = barisData($no++, $s);
+    }
+    return $hasil;
+}
+
+// Mundur: dari data terakhir sampai pertama
+function traversalMundur($arr) {
+    $hasil = array();
+    $no = 1;
+    for ($i = count($arr) - 1; $i >= 0; $i--) {
+        $hasil[] = barisData($no++, $arr[$i]);
+    }
+    return $hasil;
+}
+
+// Stack undo: dari TOP (paling akhir diinput) ke bawah, tanpa pop
+function traversalStack($undo, $data) {
+    $hasil = array();
+    $no = 1;
+    for ($i = count($undo) - 1; $i >= 0; $i--) {
+        $nama = '(tidak ditemukan)';
+
+        foreach ($data as $s) {
+            if ($s['nim'] == $undo[$i]) { $nama = $s['nama']; break; }
+        }
+        $label = ($i == count($undo) - 1) ? ' [TOP]' : '';
+        $hasil[] = $no++ . '. ' . $undo[$i] . ' - ' . $nama . $label;
+    }
+    return $hasil;
+}
+
 /* ---------- SEARCHING ---------- */
 // Linear search: cek satu per satu (data tidak perlu urut)
 function linearSearch($arr, $nama) {
@@ -84,6 +126,8 @@ $tampil = $_SESSION['data'];
 $pesan = '';
 $hasilCari = null;  //data siswa yang ditemukan
 $profil = null;   // diisi otomatis setiap kali sorting dijalankan
+$hasilTraversal = null;
+$judulTraversal = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -148,6 +192,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $hasilCari = ($i >= 0)
             ? '' . $urut[$i]['nama'] . ' (nilai ' . $urut[$i]['nilai'] . ')'
             : 'NIM tidak ditemukan.';
+
+    } elseif ($aksi == 'traversal') {
+        $jenis = $_POST['jenis'];
+        if ($jenis == 'maju') {
+            $judulTraversal = 'data pertama ke terakhir';
+            $hasilTraversal = traversalMaju($_SESSION['data']);
+        } elseif ($jenis == 'mundur') {
+            $judulTraversal = 'data terakhir ke pertama';
+            $hasilTraversal = traversalMundur($_SESSION['data']);
+        } 
 
     } elseif ($aksi == 'hapus') {                  // HAPUS satu data
         $nim = $_POST['nim'];
@@ -264,7 +318,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <hr>
 
-<h3>3. Cari Data</h3>
+<h3>3. Urutkan Data</h3>
+<form method="post">
+    <input type="hidden" name="aksi" value="traversal">
+    <select name="jenis">
+        <option value="maju">Maju</option>
+        <option value="mundur">Mundur</option>
+    </select>
+    <button>Urutkan</button>
+</form>
+
+<?php if ($hasilTraversal !== null): ?>
+    <p><b><?php echo htmlspecialchars($judulTraversal); ?></b></p>
+    <?php if (count($hasilTraversal) == 0): ?>
+        <p><i>(kosong)</i></p>
+    <?php else: ?>
+        <ol style="margin:0; padding-left:20px;">
+        <?php foreach ($hasilTraversal as $baris): ?>
+            <li style="list-style:none; margin-left:-20px;"><?php echo htmlspecialchars($baris); ?></li>
+        <?php endforeach; ?>
+        </ol>
+    <?php endif; ?>
+<?php endif; ?>
+
+
+<br>
+
+<hr>
+
+<h3>4. Cari Data</h3>
 <form method="post">
     <input type="text" name="kunci" placeholder="Nama / NIM" required>
     <button name="aksi" value="cari_linear">Cari Nama</button>
@@ -272,6 +354,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </form>
 
 <?php if ($hasilCari) echo '<p><i>' . htmlspecialchars($hasilCari) . '</i></p>'; ?>
+
+<br>
+
+<hr>
 
 <h3>Data Mahasiswa</h3>
 <table border="1" cellpadding="6" cellspacing="0">
