@@ -240,6 +240,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sistem Data Nilai Mahasiswa</title>
+
+<link rel="icon" type="image/svg+xml" href="logo.svg?v=2">
+
 <style>
     /* ===== 1. VARIABEL WARNA (mudah diganti di satu tempat) ===== */
     :root {
@@ -415,12 +418,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     tr:nth-child(even) td { background: #f8fafc; }   /* garis selang-seling */
     tr:hover td           { background: var(--biru-muda); }
 
-    /* ===== 10. RESPONSIF (layar HP) ===== */
-    @media (max-width: 600px) {
-        .card { padding: 14px; }
-        .baris input, .baris select { width: 100%; }
-        h2.judul { font-size: 18px; padding: 10px 20px; }
-    }
 </style>
 </head>
 <body>
@@ -481,14 +478,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <div class="card">
-    <h3>3. Urutkan Data</h3>
+    <h3>3. Telusuri Data</h3>
     <form method="post" class="baris">
         <input type="hidden" name="aksi" value="traversal">
         <select name="jenis">
             <option value="maju">Maju</option>
             <option value="mundur">Mundur</option>
         </select>
-        <button>Urutkan</button>
+        <button>Telusuri</button>
     </form>
 
     <?php if ($hasilTraversal !== null): ?>
