@@ -1,1 +1,1 @@
-# Tugas-Algoritma
+# Algoritma
