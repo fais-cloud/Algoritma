@@ -507,7 +507,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <?php if ($profil): ?>
     <div class="info">
-        <?php echo ucfirst($profil['dipakai']); ?> Sort
+        <?php echo ucfirst($profil['dipakai']); ?> Sort :
         <?php echo round($profil['total'], 2); ?> ms
         (rata-rata <?php echo round($profil['avg'], 4); ?> ms)
     </div>
