@@ -45,17 +45,37 @@ function ukurWaktu($fungsi, $arr, $key, $ulang) {
 // Profiling kedua metode pada data yang sama, dipanggil otomatis tiap sorting.
 // $dipakai = metode yang sedang dijalankan user ('bubble' / 'selection').
 function profilSorting($arr, $key, $dipakai, $ulang = 1000) {
-    list($bTotal, $bAvg) = ukurWaktu('bubbleSort', $arr, $key, $ulang);
-    list($sTotal, $sAvg) = ukurWaktu('selectionSort', $arr, $key, $ulang);
+     $fungsi = ($dipakai == 'bubble') ? 'bubbleSort' : 'selectionSort';
+    list($total, $avg) = ukurWaktu($fungsi, $arr, $key, $ulang);
     return array(
-        'jumlah' => count($arr),
-        'key'    => $key,
-        'ulang'  => $ulang,
-        'dipakai'=> $dipakai,
-        'bubble'    => array('total' => $bTotal, 'avg' => $bAvg),
-        'selection' => array('total' => $sTotal, 'avg' => $sAvg),
-        'tercepat'  => ($bTotal <= $sTotal) ? 'bubble' : 'selection',
+        'jumlah'  => count($arr),
+        'key'     => $key,
+        'ulang'   => $ulang,
+        'dipakai' => $dipakai,
+        'total'   => $total,
+        'avg'     => $avg,
     );
+}
+
+/* ---------- SEARCHING ---------- */
+// Linear search: cek satu per satu (data tidak perlu urut)
+function linearSearch($arr, $nama) {
+    foreach ($arr as $i => $s) {
+        if (strcasecmp($s['nama'], $nama) == 0) return $i;
+    }
+    return -1;
+}
+
+// Binary search: data HARUS sudah urut berdasarkan NIM
+function binarySearch($arr, $nim) {
+    $low = 0; $high = count($arr) - 1;
+    while ($low <= $high) {
+        $mid = (int)(($low + $high) / 2);
+        if ($arr[$mid]['nim'] == $nim) return $mid;
+        if ($arr[$mid]['nim'] < $nim) $low = $mid + 1;
+        else $high = $mid - 1;
+    }
+    return -1;
 }
 
 /* ---------- TRAVERSAL ---------- */
@@ -84,48 +104,13 @@ function traversalMundur($arr) {
     return $hasil;
 }
 
-// Stack undo: dari TOP (paling akhir diinput) ke bawah, tanpa pop
-function traversalStack($undo, $data) {
-    $hasil = array();
-    $no = 1;
-    for ($i = count($undo) - 1; $i >= 0; $i--) {
-        $nama = '(tidak ditemukan)';
-
-        foreach ($data as $s) {
-            if ($s['nim'] == $undo[$i]) { $nama = $s['nama']; break; }
-        }
-        $label = ($i == count($undo) - 1) ? ' [TOP]' : '';
-        $hasil[] = $no++ . '. ' . $undo[$i] . ' - ' . $nama . $label;
-    }
-    return $hasil;
-}
-
-/* ---------- SEARCHING ---------- */
-// Linear search: cek satu per satu (data tidak perlu urut)
-function linearSearch($arr, $nama) {
-    foreach ($arr as $i => $s) {
-        if (strcasecmp($s['nama'], $nama) == 0) return $i;
-    }
-    return -1;
-}
-
-// Binary search: data HARUS sudah urut berdasarkan NIM
-function binarySearch($arr, $nim) {
-    $low = 0; $high = count($arr) - 1;
-    while ($low <= $high) {
-        $mid = (int)(($low + $high) / 2);
-        if ($arr[$mid]['nim'] == $nim) return $mid;
-        if ($arr[$mid]['nim'] < $nim) $low = $mid + 1;
-        else $high = $mid - 1;
-    }
-    return -1;
-}
-
 /* ---------- PROSES FORM ---------- */
 $tampil = $_SESSION['data'];
 $pesan = '';
 $hasilCari = null;  //data siswa yang ditemukan
 $profil = null;   // diisi otomatis setiap kali sorting dijalankan
+$metodePilih = 'bubble';   
+$jenisPilih = 'maju';
 $hasilTraversal = null;
 $judulTraversal = '';
 
@@ -170,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } elseif ($aksi == 'urut') {
         $metode = ($_POST['metode'] == 'bubble') ? 'bubble' : 'selection';
+        $metodePilih = $metode;
         $hasil = ($metode == 'bubble')
             ? bubbleSort($_SESSION['data'], 'nilai')
             : selectionSort($_SESSION['data'], 'nilai');
@@ -195,6 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } elseif ($aksi == 'traversal') {
         $jenis = $_POST['jenis'];
+        $jenisPilih = $jenis;
         if ($jenis == 'maju') {
             $judulTraversal = 'data pertama ke terakhir';
             $hasilTraversal = traversalMaju($_SESSION['data']);
@@ -418,6 +405,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     tr:nth-child(even) td { background: #f8fafc; }   /* garis selang-seling */
     tr:hover td           { background: var(--biru-muda); }
 
+/* ===== 10. RESPONSIF UNTUK HP ===== */
+@media (max-width: 600px) {
+    body {
+        padding: 12px 10px;
+        font-size: 14px;
+    }
+
+    h2.judul {
+        display: block;
+        text-align: center;
+        font-size: 18px;
+        padding: 10px 16px;
+        border-radius: 18px;
+    }
+
+    .card {
+        padding: 14px;
+    }
+
+    /* Form tersusun ke bawah, bukan berjajar */
+    .baris {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .baris label {
+        margin-bottom: -4px;
+    }
+
+    /* 16px mencegah browser iPhone otomatis zoom saat input diketuk */
+    input[type="text"],
+
+    input[type="number"],
+    select {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    /* Tombol selebar layar (tombol Hapus di tabel tidak terpengaruh) */
+    .baris button {
+        width: 100%;
+        padding: 10px 16px;
+    }
+
+    /* Tabel lebih ringkas, tetap bisa digeser ke samping */
+    th, td {
+        padding: 8px;
+        font-size: 13px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -426,7 +465,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <h2 class="judul">Sistem Data Nilai Mahasiswa</h2>
 
 <div class="card">
-    <h3>1. Tambah ke Antrian</h3>
+    <h3>Tambah ke Antrian</h3>
     <form method="post" class="baris">
         <input type="hidden" name="aksi" value="tambah">
         <label>NIM:</label> <input type="text" name="nim" required>
@@ -456,34 +495,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <div class="card">
-    <h3>2. Urutkan Nilai</h3>
+    <h3>Urutkan Nilai</h3>
     <form method="post" class="baris">
         <input type="hidden" name="aksi" value="urut">
         <select name="metode">
-            <option value="bubble">Bubble Sort</option>
-            <option value="selection">Selection Sort</option>
+            <option value="bubble" <?php if ($metodePilih == 'bubble') echo 'selected'; ?>>Bubble Sort</option>
+            <option value="selection" <?php if ($metodePilih == 'selection') echo 'selected'; ?>>Selection Sort</option>
         </select>
         <button>Urutkan</button>
     </form>
 
     <?php if ($profil): ?>
     <div class="info">
-        Bubble Sort <?php echo round($profil['bubble']['total'], 2); ?> ms
-        (rata-rata <?php echo round($profil['bubble']['avg'], 4); ?> ms),
-        Selection Sort <?php echo round($profil['selection']['total'], 2); ?> ms
-        (rata-rata <?php echo round($profil['selection']['avg'], 4); ?> ms).
-        Tercepat: <b><?php echo ucfirst($profil['tercepat']); ?> Sort</b>.
+        <?php echo ucfirst($profil['dipakai']); ?> Sort
+        <?php echo round($profil['total'], 2); ?> ms
+        (rata-rata <?php echo round($profil['avg'], 4); ?> ms)
     </div>
     <?php endif; ?>
 </div>
 
 <div class="card">
-    <h3>3. Telusuri Data</h3>
+    <h3>Cari Data</h3>
+    <form method="post" class="baris">
+        <input type="text" name="kunci" placeholder="Nama / NIM" required>
+        <button name="aksi" value="cari_linear">Cari Nama</button>
+        <button name="aksi" value="cari_binary">Cari NIM</button>
+    </form>
+
+    <?php if ($hasilCari) echo '<div class="hasil">' . htmlspecialchars($hasilCari) . '</div>'; ?>
+</div>
+
+<div class="card">
+    <h3>Traversal</h3>
     <form method="post" class="baris">
         <input type="hidden" name="aksi" value="traversal">
         <select name="jenis">
-            <option value="maju">Maju</option>
-            <option value="mundur">Mundur</option>
+            <option value="maju" <?php if ($jenisPilih == 'maju') echo 'selected'; ?>>Maju</option>
+            <option value="mundur" <?php if ($jenisPilih == 'mundur') echo 'selected'; ?>>Mundur</option>
         </select>
         <button>Telusuri</button>
     </form>
@@ -500,17 +548,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </ul>
         <?php endif; ?>
     <?php endif; ?>
-</div>
-
-<div class="card">
-    <h3>4. Cari Data</h3>
-    <form method="post" class="baris">
-        <input type="text" name="kunci" placeholder="Nama / NIM" required>
-        <button name="aksi" value="cari_linear">Cari Nama</button>
-        <button name="aksi" value="cari_binary">Cari NIM</button>
-    </form>
-
-    <?php if ($hasilCari) echo '<div class="hasil">' . htmlspecialchars($hasilCari) . '</div>'; ?>
 </div>
 
 <div class="card">
