@@ -94,7 +94,7 @@ function traversalMundur($arr) {
     return $hasil;
 }
 
-/* ---------- TREE (Binary Search Tree berdasarkan NIM) ---------- */
+/* ---------- TREE (Berdasarkan NIM) ---------- */
 function tambahNode($node, $s) {
     if ($node === null) {
         return array('s' => $s, 'kiri' => null, 'kanan' => null);
@@ -213,8 +213,7 @@ function cariIndeksNim($arr, $nim) {
     }
     return -1;
 }
-
-
+q
 function daftarTetangga($arr, $adj) {
     $hasil = array();
     foreach ($arr as $i => $s) {
@@ -235,13 +234,11 @@ $jenisPilih = 'maju';
 $hasilTraversal = null;
 $judulTraversal = '';
 
-// Tree
 $treePilih = 'preorder';
 $hasilTree = null;
 $judulTree = '';
 $strukturTree = array();
 
-// Graph
 $graphJenis = 'bfs';
 $graphStart = '';
 $graphBatas = 10;
@@ -758,7 +755,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <div class="card">
-    <h3>Traversal Tree (BST berdasarkan NIM)</h3>
+    <h3>Traversal Tree (Berdasarkan NIM)</h3>
     <form method="post" class="baris">
         <input type="hidden" name="aksi" value="traversal_tree">
         <select name="jenis_tree">
