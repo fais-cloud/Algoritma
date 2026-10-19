@@ -417,12 +417,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sistem Data Nilai Mahasiswa</title>
+<title>Sistem Manajemen Nilai Mahasiswa</title>
 
 <link rel="icon" type="image/svg+xml" href="logo.svg?v=2">
 
 <style>
-    /* ===== 1. VARIABEL WARNA (mudah diganti di satu tempat) ===== */
+    /* ===== 1. VARIABEL WARNA  ===== */
     :root {
         --biru-tua:   #1e3a8a;
         --biru:       #2563eb;
@@ -669,7 +669,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 <div class="container">
 
-<h2 class="judul">Sistem Data Nilai Mahasiswa</h2>
+<h2 class="judul">Sistem Manajemen Nilai Mahasiswa</h2>
 
 <div class="card">
     <h3>Tambah ke Antrian</h3>
