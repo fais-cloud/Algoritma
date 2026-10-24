@@ -12,13 +12,15 @@ def hitung_kecepatan():
     kecepatan = jarak / waktu
 
     print("\n=> kecepatan : ", int(kecepatan), satuanKecepatan)
+    print("\ntekan enter untuk kembali")
 
 def luas_persegi():
-    print("=== Menghitung Luas Persegi\n")
+    print("=== Menghitung Luas Persegi ===\n")
     sisi = float(input("masukkan sisi (cm): "))
     luas = sisi**2
 
     print("\n=> luas : ", luas, satuanLuas)
+    print("\ntekan enter untuk kembali")
 
 def luas_persegi_panjang():
     print("=== Menghitung Luas Persegi Panjang ===\n")
@@ -27,6 +29,7 @@ def luas_persegi_panjang():
     luas = panjang * lebar
 
     print("\n=> luas :", luas, satuanLuas)
+    print("\ntekan enter untuk kembali")
 
 def luas_segitiga():
     print("=== Menghitung Luas Segitiga ===\n")
@@ -35,6 +38,7 @@ def luas_segitiga():
     luas = (1 / 2) * alas * tinggi
 
     print("\n=> luas segitiga : ", luas, satuanLuas)
+    print("\ntekan enter untuk kembali")
 
 def volume_balok():
     print("=== Volume Balok ===\n")
@@ -44,6 +48,7 @@ def volume_balok():
     volume = panjang * lebar * tinggi
 
     print("\n=> volume balok : ", volume, satuanVolume)
+    print("\ntekan enter untuk kembali")
 
 def volume_bola():
     print("=== Volume Bola ===\n")
@@ -51,6 +56,7 @@ def volume_bola():
     volume =  (4 / 3) * 3.14 * (r**3)
 
     print("\n=> volume bola : ", volume, satuanVolume)
+    print("\ntekan enter untuk kembali")
 
 while True:
     userInput = int(input("\nPilih rumus yang ingin dipakai: \n1. kecepatan\n2. luas persegi\n3. luas persegi panjang\n4. luas segitiga\n5. volume balok\n6. volume bola\n0. keluar\n\npilih nomor berapa: "))
@@ -69,4 +75,3 @@ while True:
         volume_bola()
     else:
         break
-
