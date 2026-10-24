@@ -16,7 +16,7 @@ def hitung_kecepatan():
 def luas_persegi():
     print("=== Menghitung Luas Persegi\n")
     sisi = float(input("masukkan sisi (cm): "))
-    luas = 4 * sisi
+    luas = sisi**2
 
     print("\n=> luas : ", luas, satuanLuas)
 
@@ -41,7 +41,7 @@ def volume_balok():
     panjang = float(input("masukkan panjang (cm): "))
     lebar = float(input("masukkan lebar (cm): "))
     tinggi = float(input("masukkan tinggi (cm) "))
-    volume = 2 * ((panjang * lebar) + (panjang * tinggi) + (lebar * tinggi))
+    volume = panjang * lebar * tinggi
 
     print("\n=> volume balok : ", volume, satuanVolume)
 
