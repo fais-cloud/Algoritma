@@ -5,8 +5,7 @@ $undo = array();   // stack: NIM yang terakhir ditambahkan
 $pesan = '';       // pesan singkat yang tampil di menu berikutnya
 
 /* ---------- FUNGSI BANTU ---------- */
-function bersihkan()
-{
+function bersihkan() {
     // aktifkan kode ANSI di Windows 10+ (PHP 7.2+)
     if (PHP_OS_FAMILY === 'Windows' && function_exists('sapi_windows_vt100_support')) {
         sapi_windows_vt100_support(STDOUT, true);
@@ -16,19 +15,16 @@ function bersihkan()
     echo "\033[H\033[2J\033[3J";
 }
 
-function input($teks)
-{
+function input($teks) {
     echo $teks;
     return trim(fgets(STDIN));
 }
 
-function jeda()
-{
+function jeda(){
     input("\nTekan Enter untuk lanjut...");
 }
 
-function tampilTabel($arr)
-{
+function tampilTabel($arr) {
     echo "No  NIM         Nama                 Nilai\n";
     echo "------------------------------------------\n";
     if (count($arr) == 0) {
@@ -55,8 +51,7 @@ function bubbleSort($arr, $key)
     return $arr;
 }
 
-function selectionSort($arr, $key)
-{
+function selectionSort($arr, $key) {
     $n = count($arr);
     for ($i = 0; $i < $n - 1; $i++) {
         $min = $i;
@@ -73,8 +68,7 @@ function selectionSort($arr, $key)
 }
 
 /* ---------- SEARCHING ---------- */
-function linearSearch($arr, $nama)
-{
+function linearSearch($arr, $nama) {
     foreach ($arr as $i => $s) {
         if (strcasecmp($s['nama'], $nama) == 0) {
             return $i;
@@ -83,8 +77,7 @@ function linearSearch($arr, $nama)
     return -1;
 }
 
-function binarySearch($arr, $nim)
-{
+function binarySearch($arr, $nim) {
     $low = 0;
     $high = count($arr) - 1;
     while ($low <= $high) {
@@ -221,3 +214,5 @@ while (true) {
 }
 
 echo "Program selesai.\n";
+
+?>
